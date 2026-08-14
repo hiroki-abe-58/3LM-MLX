@@ -1,0 +1,149 @@
+3LM-MLX
+Copyright (c) 2026 hiroki-abe-58
+
+このリポジトリのコード（src/, data/, eval/, tools/, scripts/, web/, server.py）は
+MIT License で提供しています。LICENSE を参照してください。
+
+
+================================================================================
+学習済みモデルについて
+================================================================================
+
+3LM は2段階で学習しています。
+
+  1. 事前学習: 大規模な日本語テキストで「次のトークン予測」を学ぶ
+  2. SFT     : 対話データセットで「質問に答える形」に合わせる
+
+どちらの段階も、**ShareAlike（継承）条件を持たないライセンスのデータだけ**を
+使っています。学習済みの重みを Apache License 2.0 相当の条件で配布するためで、
+継承条件つきのデータ（CC BY-SA など）は、その条件が重みに及ぶかどうかが
+明確でないため意図的に採用していません。
+
+日本語の大規模コーパスとして真っ先に候補になる Wikipedia は CC BY-SA
+なので、この方針のもとでは使えません。代わりに ODC-By の FineWeb2 と
+CC BY の青空文庫を使っています。
+
+
+--------------------------------------------------------------------------------
+1. 事前学習コーパス
+--------------------------------------------------------------------------------
+
+  FineWeb 2（jpn_Jpan サブセット）
+    https://huggingface.co/datasets/HuggingFaceFW/fineweb-2
+    Copyright (c) HuggingFace and contributors
+    Licensed under the Open Data Commons Attribution License (ODC-By) v1.0
+    https://opendatacommons.org/licenses/by/1-0/
+    revision: af9c13333eb981300149d5ca60a8e9d659b276b9
+
+    ODC-By 1.0 は帰属表示を求めるライセンスで、継承条件は持ちません。
+    FineWeb 2 は Common Crawl 由来のため、元のウェブページそれぞれの
+    権利は各著作権者に属します。
+
+  青空文庫（クリーニング済み）
+    https://huggingface.co/datasets/globis-university/aozorabunko-clean
+    Copyright (c) globis-university
+    Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0)
+    https://creativecommons.org/licenses/by/4.0/
+    revision: 42a9c9c0f1d67e6a5554d9bea4201973dc9b049c
+
+    原典は青空文庫（https://www.aozora.gr.jp/）で公開されている、
+    著作権保護期間が満了した作品です。
+
+加えた変更:
+
+  - 1文書1行のプレーンテキストに整形した（改行と空白を半角スペースに置換）
+  - ナビゲーション・Cookie 通知・著作権表示などの定型行を除去した
+  - 日本語文字の比率が 70% 未満の文書を除外した
+  - 200文字未満の文書を除外し、20,000文字を超える文書は切り詰めた
+  - 同じ文字並びが繰り返される文書（表の残骸など）を除外した
+  - 先頭200文字のハッシュで重複を除去した
+  - アダルト誘導・エラーページと判定した文書を除外した
+  - 青空文庫の割合を全体の約10%に抑えた
+
+以上の処理は data/prepare_pretrain.py に実装されています。
+使用したシャード名とその SHA256、除外の内訳、各ソースの構成比は
+data/corpus_pretrain.manifest.json に記録してあります。
+
+整形後のコーパス自体はリポジトリに含めていません（数GBあります）。
+revision を固定してあるので、data/prepare_pretrain.py を実行すると
+同じものが再現できます。
+
+
+--------------------------------------------------------------------------------
+2. SFT（対話）コーパス
+--------------------------------------------------------------------------------
+
+以下はいずれも Apache License 2.0 で、ShareAlike 条件を持ちません。
+
+  OpenAssistant Conversations Dataset (OASST1 / OASST2)
+    https://huggingface.co/datasets/OpenAssistant/oasst1
+    https://huggingface.co/datasets/OpenAssistant/oasst2
+    Copyright (c) OpenAssistant / LAION-AI contributors
+    Licensed under the Apache License, Version 2.0
+
+  oasst1-89k-ja（OASST1 を Google 翻訳で日本語化したもの）
+    https://huggingface.co/datasets/kunishou/oasst1-89k-ja
+    Licensed under the Apache License, Version 2.0
+
+  oasst2-33k-ja（OASST2 の英語サブセットを DeepL で日本語化したもの）
+    https://huggingface.co/datasets/llm-jp/oasst2-33k-ja
+    Copyright (c) LLM-jp
+    Licensed under the Apache License, Version 2.0
+
+  magpie-sft-v1.0（Magpie 法による日本語合成対話データ）
+    https://huggingface.co/datasets/llm-jp/magpie-sft-v1.0
+    Copyright (c) LLM-jp
+    Licensed under the Apache License, Version 2.0
+    生成に用いられたモデル: cyberagent/calm3-22b-chat (Apache-2.0),
+    Qwen/Qwen2.5-32B-Instruct (Apache-2.0)
+
+  Magpie-Tanuki-8B-97k（Magpie 法による日本語合成対話データ）
+    https://huggingface.co/datasets/Aratako/Magpie-Tanuki-8B-97k
+    Copyright (c) Aratako
+    Licensed under the Apache License, Version 2.0
+    生成に用いられたモデル: weblab-GENIAC/Tanuki-8B-dpo-v1.0 (Apache-2.0)
+
+Apache License, Version 2.0 の全文は licenses/Apache-2.0.txt に同梱しています。
+原文: http://www.apache.org/licenses/LICENSE-2.0
+
+加えた変更（Apache License 2.0 Section 4(b) に基づく記載）:
+
+  - OASST1 では prompter と assistant のペアを parent_id から復元した
+  - conversations / messages 形式のデータセットでは、隣り合う user と
+    assistant の発言を取り出して1組の会話にした（3ターン目以降は分割）
+  - 翻訳失敗フラグ（ng_translation == "1"）の立ったレコードを除外した
+  - 翻訳の崩れたレコードを、質問と返答の一致・短い並びの過剰な反復を
+    手がかりに除外した（oasst2-33k-ja には翻訳失敗フラグがないため）
+  - 質問・返答の長さでフィルタし、重複を除去した
+  - 出現頻度の低い文字を含む会話を除外した
+  - 改行を半角スペースに置換し、1行1会話のプレーンテキストに整形した
+
+以上の処理は data/prepare_sft.py に実装されています。
+どのデータセットを使ったかは data/prepare_sft.py --list-sources で確認できます。
+
+
+================================================================================
+制作にあたって
+================================================================================
+
+このリポジトリのコードと文書は、AI コーディング支援ツールを用いて
+書かれています。学習データは、上記のとおり継承条件を持たないライセンスで
+公開されているデータセットのみで構成しています。
+
+学習データの生成に、出力の学習利用を禁じている商用サービス
+（Anthropic Claude など）は一切使っていません。
+
+
+================================================================================
+免責
+================================================================================
+
+本モデルの出力は、学習コーパスの統計から次のトークンを予測し続けた結果にすぎません。
+事実性・正確性は一切保証されず、実在の人物・団体・製品について
+誤った内容を断定的に出力する場合があります。
+
+事前学習コーパスは Common Crawl 由来のウェブテキストを含むため、
+偏りや不適切な表現を含む可能性があります。品質フィルタは掛けていますが、
+完全ではありません。
+
+出力をそのまま公開の場に掲載する場合は、機械生成物である旨を明記してください。

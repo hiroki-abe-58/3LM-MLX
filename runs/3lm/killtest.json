@@ -1,0 +1,40 @@
+{
+  "steps": 120,
+  "batch_deterministic": true,
+  "noise": 0.004103060811758041,
+  "restore_exact": true,
+  "resumes": 2,
+  "killed_diff": 0.006079342216253281,
+  "loss_gap": 0.00010000000000065512,
+  "resumed_at": [
+    7,
+    14
+  ],
+  "loss_compared_steps": [
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100,
+    110,
+    120
+  ],
+  "loss_excluded_steps": [
+    10,
+    20
+  ],
+  "noopt_diff": 0.11407981812953949,
+  "noopt_loss_gap": 0.11770000000000014,
+  "checks": {
+    "バッチが step の関数になっている": true,
+    "戻した瞬間の状態が保存時と厳密に一致する": true,
+    "kill 後の差が雑音の範囲に収まっている": true,
+    "kill 後の学習曲線に段差が無い": true,
+    "対照実験では差が雑音より明らかに大きい": true,
+    "実際に再開が起きた": true
+  },
+  "passed": true
+}

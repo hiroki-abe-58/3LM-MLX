@@ -1,0 +1,53 @@
+{
+  "target_chars": 1200000000,
+  "total_chars": 1199015936,
+  "total_documents": 786630,
+  "elapsed_seconds": 640.2,
+  "filters": {
+    "min_chars": 200,
+    "max_chars": 20000,
+    "min_ja_ratio": 0.7,
+    "rejected": {
+      "短すぎる": 44850,
+      "同じ並びの繰り返し": 32406,
+      "日本語の比率が低い": 50570,
+      "重複": 1310,
+      "不適切・エラーページ": 8372
+    }
+  },
+  "sources": [
+    {
+      "repo": "globis-university/aozorabunko-clean",
+      "revision": "42a9c9c0f1d67e6a5554d9bea4201973dc9b049c",
+      "license": "CC BY 4.0",
+      "documents": 16018,
+      "chars": 119015882,
+      "share": 0.0993
+    },
+    {
+      "repo": "HuggingFaceFW/fineweb-2",
+      "revision": "af9c13333eb981300149d5ca60a8e9d659b276b9",
+      "license": "ODC-By 1.0",
+      "documents": 770612,
+      "chars": 1080000054,
+      "share": 0.9007
+    }
+  ],
+  "files": [
+    {
+      "shard": "aozorabunko-dedupe-clean.jsonl.gz",
+      "bytes": 240780659,
+      "sha256": "3f41359c59b4bb1bf2d5692131463afc3f34a8208b987a563c1d60f9ab90d278"
+    },
+    {
+      "shard": "data/jpn_Jpan/train/000_00000.parquet",
+      "bytes": 4844435070,
+      "sha256": "7b049453830d0e91806744d1860d094be533ad43864cd1e6e076c21b95e25e74"
+    }
+  ],
+  "output": {
+    "name": "corpus_pretrain.txt",
+    "sha256": "711f85b0e5f599683663e4dff5360042a927926586ec7e38b090c2df71e5fed8",
+    "bytes": 3400014750
+  }
+}

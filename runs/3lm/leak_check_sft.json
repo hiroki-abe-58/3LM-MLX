@@ -1,0 +1,16 @@
+{
+  "holdout": "eval/holdout.txt",
+  "holdout_lines": 249,
+  "probe_chars": 48,
+  "probes": 654,
+  "corpora": [
+    {
+      "corpus": "corpus_sft.txt",
+      "bytes": 28491027,
+      "hit_probes": 0,
+      "affected_holdout_lines": [],
+      "examples": []
+    }
+  ],
+  "leaked": false
+}

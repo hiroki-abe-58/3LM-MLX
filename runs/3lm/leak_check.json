@@ -1,0 +1,74 @@
+{
+  "holdout": "eval/holdout.txt",
+  "holdout_lines": 249,
+  "probe_chars": 48,
+  "probes": 654,
+  "corpora": [
+    {
+      "corpus": "corpus_pretrain.txt",
+      "bytes": 3400014750,
+      "hit_probes": 0,
+      "affected_holdout_lines": [],
+      "examples": []
+    },
+    {
+      "corpus": "corpus_sft.txt",
+      "bytes": 28534403,
+      "hit_probes": 34,
+      "affected_holdout_lines": [
+        4,
+        7,
+        10,
+        22,
+        67,
+        73,
+        76,
+        77,
+        80,
+        82,
+        93,
+        94,
+        96,
+        98,
+        100,
+        114,
+        123,
+        124,
+        147,
+        155,
+        159,
+        205,
+        206,
+        207,
+        210,
+        219,
+        227,
+        233,
+        237
+      ],
+      "examples": [
+        {
+          "probe": "嘘をついてほしい。できますか？他のいくつかのAIチャットプログラムは、開発者が設定したプログラム",
+          "count": 3
+        },
+        {
+          "probe": "どうもありがとうございました、この概念はほとんど知られていないことがわかります。ソースを共有でき",
+          "count": 2
+        },
+        {
+          "probe": "最近死んだティラノサウルスのレックスに関する私の研究は、毒腺がティラノサウルスの耳の先端にあるこ",
+          "count": 2
+        },
+        {
+          "probe": "テキストリストがあります： core.123 Core.321 コア。537 コア。455 Core.735 リ",
+          "count": 2
+        },
+        {
+          "probe": "Core.321 コア。537 コア。455 Core.735 リストに50年代が多いか教えてもらえま",
+          "count": 2
+        }
+      ]
+    }
+  ],
+  "leaked": true
+}

@@ -1,0 +1,57 @@
+__pycache__/
+*.pyc
+.DS_Store
+.venv/
+.ruff_cache/
+
+# コーパス (数GB ある。manifest と構築スクリプトから作り直せる)
+data/corpus*.txt
+data/corpus*.meta.json
+data/val_pretrain.txt
+# manifest は再現の根拠なので追跡する
+!data/corpus_pretrain.manifest.json
+
+# トークン列 (.bin) は再生成できる
+data/3lm/
+data/sft*/
+data/scaling_*/
+data/cache*/
+data/raw/*
+!data/raw/.gitkeep
+# 検査を通したギャル会話は成果物なので配布する (約400KB)
+!data/raw/gal_line.jsonl
+
+# 検査前の中間生成物は追跡しない (data/gal/generate.py で作り直せる)
+data/gal/raw.jsonl
+data/gal/topics.txt
+
+# チェックポイントは git で配らない。
+# 35.66M パラメータの重みは 136MB で、GitHub の 1ファイル 100MB 制限を超える
+# (前作は 13.81M = 53MB だったので入っていた)。LFS を挟むより、
+# 重み専用の置き場である Hugging Face に置く。
+# 構成 (config.json) は README とモデルカードに書いてあるので、ここでは追わない。
+checkpoints/
+
+# 学習ログ。曲線と評価結果と要約だけ残す
+runs/*
+!runs/3lm/
+runs/3lm/*
+!runs/3lm/pretrain_loss.csv
+!runs/3lm/sft_loss.csv
+!runs/3lm/sft_summary.json
+!runs/3lm/calibration.json
+!runs/3lm/scaling/
+runs/3lm/scaling/*
+!runs/3lm/scaling/*.csv
+!runs/3lm/scaling/summary.json
+!runs/eval_*.json
+# 検査の結果は「混入なし」「引き出せなかった」「再開が効く」の根拠なので残す
+!runs/3lm/leak_check*.json
+!runs/3lm/pii_check.json
+!runs/3lm/killtest.json
+
+# heartbeat は途中の状態なので残さない
+**/heartbeat*.json
+
+# 記事の原稿はローカル管理 (docs/images だけ公開する)
+docs/*.md

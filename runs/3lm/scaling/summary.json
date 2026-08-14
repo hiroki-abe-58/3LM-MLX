@@ -1,0 +1,38 @@
+[
+  {
+    "label": "949万文字",
+    "chars": 12760973,
+    "train_tokens": 6204169,
+    "epochs": 4.753,
+    "divergence_step": 900,
+    "best_val": 4.6673,
+    "best_step": 3600,
+    "final_train": 4.5164,
+    "minutes": 16.9,
+    "csv": "runs/3lm/scaling/loss_949man.csv"
+  },
+  {
+    "label": "1億文字",
+    "chars": 112198211,
+    "train_tokens": 68808939,
+    "epochs": 0.429,
+    "divergence_step": 0,
+    "best_val": 4.5964,
+    "best_step": 3600,
+    "final_train": 4.6612,
+    "minutes": 16.8,
+    "csv": "runs/3lm/scaling/loss_1oku.csv"
+  },
+  {
+    "label": "全量",
+    "chars": 1199015862,
+    "train_tokens": 752679894,
+    "epochs": 0.039,
+    "divergence_step": 0,
+    "best_val": 4.5767,
+    "best_step": 3600,
+    "final_train": 4.6575,
+    "minutes": 17.1,
+    "csv": "runs/3lm/scaling/loss_全量.csv"
+  }
+]

@@ -1,0 +1,106 @@
+{
+  "note": "8時間の予算に対して、実測 tok/s から入るトークン数と D/N を出したもの。計画では 8層512次元 (42.08M) を 5.14億トークンで学習する想定だったが、ctx 512 の実測が 10.9k tok/s と見積もりの3分の1だったため、D/N が 11 にしかならないことが分かった。Chinchilla の目安 20 に最も近いのは 6層512次元 / バッチ32 で、これを採用した。",
+  "hours": 8.0,
+  "usable_seconds": 25920.0,
+  "vocab_size": 32000,
+  "measured_steps": 40,
+  "measured_warmup": 10,
+  "device": "Apple M1 Max",
+  "mlx_version": "0.32.0",
+  "results": [
+    {
+      "label": "6層 384次元 (その2と同じ形で ctx 512)",
+      "arch": "2lm",
+      "n_layer": 6, "n_embd": 384, "n_head": 6, "block_size": 512, "batch_size": 24,
+      "params": 23120000, "non_embed": 10640000,
+      "tok_per_sec": 19800, "peak_gb": 7.7,
+      "tokens_in_budget": 514421794, "steps_in_budget": 41863, "d_over_n": 48.4
+    },
+    {
+      "label": "6層 512次元 batch24",
+      "arch": "3lm",
+      "n_layer": 6, "n_embd": 512, "n_head": 8, "block_size": 512, "batch_size": 24,
+      "params": 35660000, "non_embed": 19270000,
+      "tok_per_sec": 13400, "peak_gb": 8.7,
+      "tokens_in_budget": 347357592, "steps_in_budget": 28268, "d_over_n": 18.0
+    },
+    {
+      "label": "6層 512次元 batch32",
+      "arch": "3lm",
+      "n_layer": 6, "n_embd": 512, "n_head": 8, "block_size": 512, "batch_size": 32,
+      "params": 35660000, "non_embed": 19270000,
+      "tok_per_sec": 14200, "peak_gb": 11.3,
+      "tokens_in_budget": 367608645, "steps_in_budget": 22437, "d_over_n": 19.1,
+      "selected": true
+    },
+    {
+      "label": "6層 512次元 batch48",
+      "arch": "3lm",
+      "n_layer": 6, "n_embd": 512, "n_head": 8, "block_size": 512, "batch_size": 48,
+      "params": 35660000, "non_embed": 19270000,
+      "tok_per_sec": 13000, "peak_gb": 16.8,
+      "tokens_in_budget": 336007966, "steps_in_budget": 13672, "d_over_n": 17.4
+    },
+    {
+      "label": "7層 512次元 batch32",
+      "arch": "3lm",
+      "n_layer": 7, "n_embd": 512, "n_head": 8, "block_size": 512, "batch_size": 32,
+      "params": 38870000, "non_embed": 22490000,
+      "tok_per_sec": 12200, "peak_gb": 12.4,
+      "tokens_in_budget": 315950825, "steps_in_budget": 19284, "d_over_n": 14.1
+    },
+    {
+      "label": "8層 512次元 batch24 (当初の計画)",
+      "arch": "3lm",
+      "n_layer": 8, "n_embd": 512, "n_head": 8, "block_size": 512, "batch_size": 24,
+      "params": 42080000, "non_embed": 25700000,
+      "tok_per_sec": 10900, "peak_gb": 10.2,
+      "tokens_in_budget": 283048003, "steps_in_budget": 23034, "d_over_n": 11.0
+    },
+    {
+      "label": "8層 512次元 batch32",
+      "arch": "3lm",
+      "n_layer": 8, "n_embd": 512, "n_head": 8, "block_size": 512, "batch_size": 32,
+      "params": 42080000, "non_embed": 25700000,
+      "tok_per_sec": 11600, "peak_gb": 13.4,
+      "tokens_in_budget": 301560577, "steps_in_budget": 18405, "d_over_n": 11.7
+    },
+    {
+      "label": "8層 512次元 batch48",
+      "arch": "3lm",
+      "n_layer": 8, "n_embd": 512, "n_head": 8, "block_size": 512, "batch_size": 48,
+      "params": 42080000, "non_embed": 25700000,
+      "tok_per_sec": 11200, "peak_gb": 19.8,
+      "tokens_in_budget": 289765664, "steps_in_budget": 11790, "d_over_n": 11.3
+    },
+    {
+      "label": "6層 576次元 batch32",
+      "arch": "3lm",
+      "n_layer": 6, "n_embd": 576, "n_head": 9, "block_size": 512, "batch_size": 32,
+      "params": 42330000, "non_embed": 23900000,
+      "tok_per_sec": 10900, "peak_gb": 12.2,
+      "tokens_in_budget": 283156337, "steps_in_budget": 17282, "d_over_n": 11.8
+    },
+    {
+      "label": "10層 640次元 batch16",
+      "arch": "3lm",
+      "n_layer": 10, "n_embd": 640, "n_head": 10, "block_size": 512, "batch_size": 16,
+      "params": 68830000, "non_embed": 48350000,
+      "tok_per_sec": 7100, "peak_gb": 9.7,
+      "tokens_in_budget": 184021432, "steps_in_budget": 22463, "d_over_n": 3.8
+    }
+  ],
+  "selected": {
+    "label": "6層 512次元 batch32",
+    "params": 35660000,
+    "non_embed": 19270000,
+    "tokens": 367608645,
+    "d_over_n": 19.1,
+    "reason": "Chinchilla の目安 D/N=20 に最も近い。バッチを 24→32 に増やすと 13.4k→14.2k tok/s に上がった (行列が大きいほうが GPU の使用効率が良い)。48 まで増やすと 13.0k に落ち、ピークメモリも 16.8GB になるので 32 で止めた。"
+  },
+  "observations": [
+    "計画の見積もり (ctx 512 で 31k tok/s) は実測の3倍近く楽観的だった。ctx を 256→512 にすると行列積が大きくなって効率が上がる一方、アテンションは文脈長の2乗で増える。後者が勝った。",
+    "バッチを増やすと tok/s が上がる区間がある (24→32 で +6%)。ただし 48 では下がる。メモリ帯域が飽和する手前に最適点がある。",
+    "同じ 42M 前後でも、層を増やす (8層512) より幅を増やす (6層576) より、層と幅を抑えてトークンを稼ぐほうが D/N の観点で有利になる。8時間という固定予算では「小さいモデルを長く学習する」側に倒れる。"
+  ]
+}

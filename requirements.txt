@@ -1,0 +1,9 @@
+mlx>=0.32.0
+numpy>=2.0
+sentencepiece>=0.2        # サブワード語彙 (32,000) の学習
+fastapi>=0.115            # Web GUI (server.py)
+uvicorn[standard]>=0.30
+datasets>=3.0             # 対話データセットの取得 (data/prepare_sft.py)
+huggingface_hub>=0.26     # コーパス取得と重みの公開
+pyarrow>=17.0             # FineWeb2 の parquet をストリーム読みする
+matplotlib>=3.9           # 学習曲線の図 (tools/plot_loss.py)

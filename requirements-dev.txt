@@ -1,0 +1,5 @@
+# 記事・動画用のツール (tools/) と静的解析だけに必要なもの。
+# 学習と会話には不要。
+matplotlib>=3.9    # tools/plot_loss.py (Pillow も一緒に入る)
+websockets>=13     # tools/screenshot.py (DevTools Protocol)
+ruff>=0.6
