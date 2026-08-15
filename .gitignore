@@ -43,6 +43,7 @@ runs/3lm/*
 !runs/3lm/domain_bpc.json
 # 図に載せた返答の全文。切り方で印象を作っていないか確認できるようにする
 !runs/3lm/reply_compare.json
+!runs/3lm/gal_reply_compare.json
 !runs/3lm/scaling/
 runs/3lm/scaling/*
 !runs/3lm/scaling/*.csv

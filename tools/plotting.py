@@ -42,6 +42,30 @@ def apply_style() -> None:
     plt.rcParams["axes.unicode_minus"] = False
 
 
+def wrap_ja(text: str, width: int) -> list[str]:
+    """日本語を文字数で折り返す.
+
+    textwrap は空白で切るので、空白の無い日本語では丸ごと1行になる。
+    句読点と閉じ括弧が行頭に来ると読みづらいので、直前の行に押し込む。
+    """
+    lines: list[str] = []
+    line = ""
+    for ch in text:
+        if len(line) >= width and ch not in "。、」）ｗw！？":
+            lines.append(line)
+            line = ch
+        else:
+            line += ch
+    if line:
+        lines.append(line)
+    return lines
+
+
+def clip(text: str, limit: int) -> str:
+    """長すぎる文を切る。切ったことが分かるように「…」を付ける."""
+    return text if len(text) <= limit else text[:limit].rstrip() + "…"
+
+
 def style_axes(ax) -> None:
     ax.set_facecolor(BACKGROUND)
     ax.grid(alpha=0.15)

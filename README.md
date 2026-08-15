@@ -413,8 +413,8 @@ python3 tools/compare_domains.py --baseline ../2LM-MLX-GAL/checkpoints/final
 
 ```bash
 # 会話データは 3LM-MLX-GAL にあります (このリポジトリには置いていません)
-curl -sL -o data/raw/gal_line.jsonl \
-  https://raw.githubusercontent.com/hiroki-abe-58/3LM-MLX-GAL/main/data/gal_line.jsonl
+curl -sL -o data/raw/gal_chat.jsonl \
+  https://raw.githubusercontent.com/hiroki-abe-58/3LM-MLX-GAL/main/data/gal_chat.jsonl
 
 python3 data/prepare_sft.py --no-hf --out data/corpus_gal.txt --min-char-freq 1
 python3 src/sft.py --init-from checkpoints/sft-final --corpus data/corpus_gal.txt \
@@ -426,6 +426,13 @@ python3 src/sft.py --init-from checkpoints/sft-final --corpus data/corpus_gal.tx
 
 **増えませんでした。** 30ステップ（約48秒）で口調が乗り、
 しかも**失うものが減っていました。**
+
+![前作と今作の会話比較](docs/images/3lm-gal-chat.png)
+
+前作は「猫は元気になることない」と日本語自体が崩れ、今作は
+「猫、かわいいよね〜」と受けてから逸れます。ただし**逸れる先は同じ**です。
+「お腹が空く」癖は事前学習を126倍にしても消えませんでした。
+**キャラクターの中身を決めているのは会話データのほう**だと分かります。
 
 | 代償（素 → 口調あり） | 2LM 13.81M | 3LM 35.66M |
 |---|---|---|

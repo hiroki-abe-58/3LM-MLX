@@ -51,12 +51,52 @@ RAW_PROMPTS = [
     "駅前の再開発について、市は",
 ]
 
+# 口調を乗せた版どうしの比較。その3の記事に載せた画面と**同じ質問**にする。
+# 別の質問で比べると「質問が易しくなっただけ」の可能性を潰せない。
+GAL_PROMPTS = [
+    "おはよう",
+    "今日バイト行きたくない",
+    "お金貯めたい",
+    "AIって将来どうなると思う？",
+    "日本の首都はどこ？",
+    "猫について教えて",
+]
+
+
+def collect(models, groups, sampling, seed) -> list[dict]:
+    """モデル × 質問群を総当たりして記録を返す.
+
+    種は「何番目の質問か」だけで決まるようにする。モデルごとに違う種を
+    使うと、差がモデルのせいなのか運のせいなのか分けられなくなる。
+    """
+    records: list[dict] = []
+    for label, ckpt in models:
+        model, tokenizer = load_bundle(ckpt)
+        for offset, (mode, prompts) in enumerate(groups):
+            for i, prompt in enumerate(prompts):
+                mx.random.seed(seed + offset * 100 + i)
+                if mode == "raw":
+                    ids = generate_stream(model, tokenizer.encode(prompt), **sampling)
+                    reply = "".join(decode_incrementally(tokenizer, ids))
+                else:
+                    reply = "".join(chat_stream(model, tokenizer, [], prompt, **sampling))
+                records.append(
+                    {"mode": mode, "model": label, "prompt": prompt, "reply": reply}
+                )
+                print(f"  [{mode:<4}] {label}  {prompt}\n         {reply}")
+    return records
+
 
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--baseline", required=True, help="前作 (2LM) の重み")
-    ap.add_argument("--new", default=str(ROOT / "checkpoints" / "sft-final"))
-    ap.add_argument("--out", default=str(ROOT / "runs" / "3lm" / "reply_compare.json"))
+    ap.add_argument("--new", default="")
+    ap.add_argument("--out", default="")
+    ap.add_argument(
+        "--gal",
+        action="store_true",
+        help="口調を乗せた版どうしを比べる (既定は対話調整版どうし)",
+    )
     ap.add_argument("--temperature", type=float, default=0.8)
     ap.add_argument("--top-k", type=int, default=40)
     ap.add_argument("--repetition-penalty", type=float, default=1.15)
@@ -64,31 +104,28 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=777)
     args = ap.parse_args()
 
-    models = [("2LM 13.81M", Path(args.baseline)), ("3LM 35.66M", Path(args.new))]
+    if args.gal:
+        default_new = ROOT / "checkpoints" / "gal-final"
+        default_out = ROOT / "runs" / "3lm" / "gal_reply_compare.json"
+        groups = [("gal", GAL_PROMPTS)]
+    else:
+        default_new = ROOT / "checkpoints" / "sft-final"
+        default_out = ROOT / "runs" / "3lm" / "reply_compare.json"
+        groups = [("chat", CHAT_PROMPTS), ("raw", RAW_PROMPTS)]
+
+    models = [
+        ("2LM 13.81M", Path(args.baseline).expanduser()),
+        ("3LM 35.66M", Path(args.new).expanduser() if args.new else default_new),
+    ]
     sampling = dict(
         temperature=args.temperature, top_k=args.top_k,
         repetition_penalty=args.repetition_penalty,
         max_new_tokens=args.max_new_tokens,
     )
 
-    records: list[dict] = []
-    for label, ckpt in models:
-        model, tokenizer = load_bundle(ckpt)
-        # prompt ごとに同じ種を蒔く。モデルを跨いでも同じ条件にしたいので、
-        # 「何番目の prompt か」だけで決まるようにする。
-        for i, prompt in enumerate(CHAT_PROMPTS):
-            mx.random.seed(args.seed + i)
-            reply = "".join(chat_stream(model, tokenizer, [], prompt, **sampling))
-            records.append({"mode": "chat", "model": label, "prompt": prompt, "reply": reply})
-            print(f"  [chat] {label}  {prompt}\n         {reply}")
-        for i, prompt in enumerate(RAW_PROMPTS):
-            mx.random.seed(args.seed + 100 + i)
-            ids = generate_stream(model, tokenizer.encode(prompt), **sampling)
-            reply = "".join(decode_incrementally(tokenizer, ids))
-            records.append({"mode": "raw", "model": label, "prompt": prompt, "reply": reply})
-            print(f"  [raw ] {label}  {prompt}\n         {reply}")
+    records = collect(models, groups, sampling, args.seed)
 
-    out = Path(args.out)
+    out = Path(args.out) if args.out else default_out
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(
         json.dumps({"sampling": sampling, "records": records}, ensure_ascii=False, indent=2),

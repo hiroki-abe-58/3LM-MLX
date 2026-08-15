@@ -30,7 +30,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from matplotlib.patches import FancyBboxPatch  # noqa: E402
 
-from tools.plotting import BACKGROUND, apply_style  # noqa: E402
+from tools.plotting import BACKGROUND, apply_style, clip  # noqa: E402
+from tools.plotting import wrap_ja as _wrap_ja  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -55,25 +56,7 @@ FOOTER_H = 0.46
 
 
 def wrap_ja(text: str, width: int = CHARS_PER_LINE) -> list[str]:
-    """日本語は空白で切れないので文字数で折る.
-
-    句読点や閉じ括弧が行頭に来ると読みづらいので、直前の行に押し込む。
-    """
-    lines: list[str] = []
-    line = ""
-    for ch in text:
-        if len(line) >= width and ch not in "。、」）":
-            lines.append(line)
-            line = ch
-        else:
-            line += ch
-    if line:
-        lines.append(line)
-    return lines
-
-
-def clip(text: str, limit: int) -> str:
-    return text if len(text) <= limit else text[:limit].rstrip() + "…"
+    return _wrap_ja(text, width)
 
 
 class Sheet:
