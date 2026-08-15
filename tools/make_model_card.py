@@ -58,13 +58,58 @@ def pii_lines(check: dict) -> list[str]:
     ]
 
 
+def domain_lines(domains: dict) -> list[str]:
+    """検証セットの出自によって勝敗が変わることを、カードに明記する.
+
+    上の 4指標は「公開データ由来の会話」だけで測っている。
+    前作 (2LM) はその公開データで**事前学習した**モデルなので、
+    そこは前作のホームグラウンドにあたる。
+    その表だけを載せると「大きくしたのに全部悪化した」と読めてしまう。
+
+    **指標は、何で測ったかとセットでなければ意味を持たない。**
+    """
+    records = domains.get("records") or []
+    if not records:
+        return []
+
+    models = list(dict.fromkeys(r["model"] for r in records))
+    fields = list(dict.fromkeys(r["domain"] for r in records))
+    lines = [
+        "",
+        "### 検証セットを変えると、勝敗が変わります",
+        "",
+        "上の表は「公開データ由来の会話」で測ったものです。"
+        "前作はその公開データで**事前学習した**モデルなので、"
+        "そこは前作の得意分野にあたります。"
+        "土俵を変えて、同じ bits/char (低いほど良い) で並べます。",
+        "",
+        "| モデル | " + " | ".join(fields) + " |",
+        "|---" * (len(fields) + 1) + "|",
+    ]
+    for model in models:
+        cells = []
+        for field in fields:
+            hit = next(
+                (r for r in records if r["model"] == model and r["domain"] == field), None
+            )
+            cells.append(f"{hit['bits_per_char']:.3f}" if hit else "-")
+        lines.append(f"| {model} | " + " | ".join(cells) + " |")
+    lines += [
+        "",
+        "一般的な日本語の文 (土俵B) では前作を大きく上回ります。"
+        "**bits/char は分母が文字数なので、語彙の大きさが違うモデル同士でも比べられます。**",
+    ]
+    return lines
+
+
 def build(args) -> str:
     ckpt = Path(args.ckpt)
     cfg = read_json(ckpt / "config.json")
-    metrics = read_json(ckpt / "metrics.json")
     evaluation = read_json(Path(args.eval)) if args.eval else {}
     baseline = read_json(Path(args.baseline)) if args.baseline else {}
     manifest = read_json(Path(args.manifest))
+    pretrain_metrics = read_json(Path(args.pretrain_metrics)) if args.pretrain_metrics else {}
+    domains = read_json(Path(args.domains)) if args.domains else {}
     data_meta = read_json(Path(args.data_meta))
     sft = read_json(Path(args.sft_summary))
 
@@ -120,8 +165,8 @@ def build(args) -> str:
         f"| 文脈長 | {fmt(cfg.get('block_size'))} |",
         f"| 層 / 次元 / ヘッド | {cfg.get('n_layer')} / {cfg.get('n_embd')} / {cfg.get('n_head')} |",
         "| 構成 | RoPE / RMSNorm / SwiGLU / bias なし / weight tying |",
-        f"| 事前学習トークン | {fmt(metrics.get('tokens_seen'))} |",
-        f"| 事前学習コーパス | {fmt(manifest.get('total_chars'))} 文字 |",
+        f"| 事前学習トークン | {fmt(pretrain_metrics.get('tokens_seen'))} |",
+        f"| 事前学習コーパス | {fmt(data_meta.get('chars') or manifest.get('total_chars'))} 文字 |",
         "| 学習環境 | Apple M1 Max 64GB / MLX |",
         "",
         "## 評価",
@@ -132,7 +177,7 @@ def build(args) -> str:
         f"repetition_penalty {sampling.get('repetition_penalty', '-')} / "
         f"seed {sampling.get('seed', '-')}) で測っています。",
         "",
-        "| 指標 | " + name + (" | 前作 (2LM-MLX) | 差 |" if baseline else " |"),
+        "| 指標 | " + name + (f" | {args.baseline_label} | 差 |" if baseline else " |"),
         "|---|---|" + ("---|---|" if baseline else ""),
     ]
 
@@ -168,6 +213,7 @@ def build(args) -> str:
             "学習データから除いたうえで、**部分一致でも混入していないことを"
             "検査してから**測っています。",
         ]
+    lines += domain_lines(domains)
 
     lines += [
         "",
@@ -278,8 +324,11 @@ def build(args) -> str:
             "",
             f"- 1トークンあたり **{data_meta['chars_per_token']} 文字** "
             f"(語彙 {fmt(data_meta.get('vocab_size'))} / ウェブ文書)",
+            # train だけだと val のぶんが落ちて、上の「コーパス文字数」と
+            # 桁が合わなくなる。文字数と対応する量は train + val。
             f"- コーパス {fmt(data_meta.get('chars'))} 文字 = "
-            f"{fmt(data_meta.get('train_tokens'))} トークン",
+            f"{fmt(data_meta.get('train_tokens', 0) + data_meta.get('val_tokens', 0))} トークン "
+            f"(うち学習に使ったのは {fmt(data_meta.get('train_tokens'))})",
         ]
 
     return "\n".join(lines) + "\n"
@@ -291,12 +340,19 @@ def main() -> None:
     ap.add_argument("--repo", required=True)
     ap.add_argument("--out", default="")
     ap.add_argument("--eval", default="")
-    ap.add_argument("--baseline", default="", help="前作の評価 json (並べて出す)")
+    ap.add_argument("--baseline", default="", help="比較相手の評価 json (並べて出す)")
+    ap.add_argument("--baseline-label", default="前作 (2LM-MLX)",
+                    help="比較相手の列見出し。口調版なら「口調の学習前」など")
     ap.add_argument("--manifest", default=str(ROOT / "data" / "corpus_pretrain.manifest.json"))
     ap.add_argument("--data-meta", default=str(ROOT / "data" / "3lm" / "meta.json"))
-    ap.add_argument("--sft-summary", default=str(ROOT / "runs" / "3lm" / "sft_summary.json"))
+    ap.add_argument("--sft-summary", default=str(ROOT / "runs" / "3lm" / "sft_loss_summary.json"))
     ap.add_argument("--pii-check", default=str(ROOT / "runs" / "3lm" / "pii_check.json"),
                     help="tools/check_pii.py の結果。無ければ「未検査」と書く")
+    ap.add_argument("--pretrain-metrics",
+                    default=str(ROOT / "checkpoints" / "pretrain-final" / "metrics.json"),
+                    help="事前学習の metrics.json。SFT 後の重みには読んだトークン数が無い")
+    ap.add_argument("--domains", default=str(ROOT / "runs" / "3lm" / "domain_bpc.json"),
+                    help="tools/compare_domains.py の結果")
     ap.add_argument("--params", type=int, default=0)
     ap.add_argument("--non-embed", type=int, default=0)
     ap.add_argument("--character", action="store_true", help="口調を学習した版のカードにする")

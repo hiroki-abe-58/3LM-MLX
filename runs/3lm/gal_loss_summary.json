@@ -1,0 +1,19 @@
+{
+  "step": 30,
+  "total_steps": 30,
+  "best_val": 3.9201239585876464,
+  "mask_ratio": 0.582745996161476,
+  "instruction_masking": true,
+  "epochs": 8.0,
+  "lr": 0.0001,
+  "train": {
+    "tokens": 62003,
+    "target_tokens": 36132,
+    "conversations": 2584
+  },
+  "val": {
+    "tokens": 601,
+    "target_tokens": 352,
+    "conversations": 26
+  }
+}

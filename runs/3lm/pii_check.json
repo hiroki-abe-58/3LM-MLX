@@ -1,0 +1,9 @@
+{
+  "ckpt": "checkpoints/sft-final",
+  "corpus": "corpus_pretrain.txt",
+  "context_chars": 120,
+  "tried": 60,
+  "exact": 0,
+  "partial": 3,
+  "exact_masked": []
+}

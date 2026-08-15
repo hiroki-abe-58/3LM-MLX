@@ -38,8 +38,12 @@ runs/*
 runs/3lm/*
 !runs/3lm/pretrain_loss.csv
 !runs/3lm/sft_loss.csv
-!runs/3lm/sft_summary.json
+!runs/3lm/gal_loss.csv
+# 要約はログ名から作るので <ログ名>_summary.json になる
+!runs/3lm/*_summary.json
 !runs/3lm/calibration.json
+# 土俵ごとの bits/char。「どの検証セットで測ったか」の根拠
+!runs/3lm/domain_bpc.json
 !runs/3lm/scaling/
 runs/3lm/scaling/*
 !runs/3lm/scaling/*.csv

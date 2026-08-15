@@ -1,0 +1,62 @@
+{
+  "max_chars": 400000,
+  "eval_block": 256,
+  "records": [
+    {
+      "model": "2LM 13.81M",
+      "ckpt": "checkpoints/final",
+      "domain": "A 公開データ由来の会話",
+      "chars": 40488,
+      "bits_per_char": 2.54
+    },
+    {
+      "model": "2LM 13.81M",
+      "ckpt": "checkpoints/final",
+      "domain": "B Web文+青空文庫",
+      "chars": 400000,
+      "bits_per_char": 6.481
+    },
+    {
+      "model": "3LM 35.66M 事前学習のみ",
+      "ckpt": "checkpoints/pretrain-final",
+      "domain": "A 公開データ由来の会話",
+      "chars": 40488,
+      "bits_per_char": 3.381
+    },
+    {
+      "model": "3LM 35.66M 事前学習のみ",
+      "ckpt": "checkpoints/pretrain-final",
+      "domain": "B Web文+青空文庫",
+      "chars": 400000,
+      "bits_per_char": 3.68
+    },
+    {
+      "model": "3LM 35.66M SFT済み",
+      "ckpt": "checkpoints/sft-final",
+      "domain": "A 公開データ由来の会話",
+      "chars": 40488,
+      "bits_per_char": 2.801
+    },
+    {
+      "model": "3LM 35.66M SFT済み",
+      "ckpt": "checkpoints/sft-final",
+      "domain": "B Web文+青空文庫",
+      "chars": 400000,
+      "bits_per_char": 4.651
+    },
+    {
+      "model": "3LM 35.66M 口調あり",
+      "ckpt": "checkpoints/gal-final",
+      "domain": "A 公開データ由来の会話",
+      "chars": 40488,
+      "bits_per_char": 3.154
+    },
+    {
+      "model": "3LM 35.66M 口調あり",
+      "ckpt": "checkpoints/gal-final",
+      "domain": "B Web文+青空文庫",
+      "chars": 400000,
+      "bits_per_char": 4.901
+    }
+  ]
+}

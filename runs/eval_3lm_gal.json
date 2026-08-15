@@ -1,0 +1,243 @@
+{
+  "tag": "3lm_gal",
+  "ckpt": "checkpoints/gal-final",
+  "holdout": "holdout_clean.txt",
+  "holdout_lines": 220,
+  "bits_per_char": 3.154,
+  "repetition_rate": 0.0,
+  "topic_rate": 0.4,
+  "broken_rate": 0.0,
+  "avg_reply_len": 26.1,
+  "sampling": {
+    "temperature": 0.8,
+    "top_k": 40,
+    "repetition_penalty": 1.15,
+    "seed": 777
+  },
+  "results": [
+    {
+      "id": "greet_1",
+      "category": "挨拶",
+      "turns": [
+        "こんにちは"
+      ],
+      "reply": "今日は何食べようかな",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": null
+    },
+    {
+      "id": "greet_2",
+      "category": "挨拶",
+      "turns": [
+        "おはようございます"
+      ],
+      "reply": "へー、今日は全然寝られへんからw",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": null
+    },
+    {
+      "id": "greet_3",
+      "category": "挨拶",
+      "turns": [
+        "元気ですか"
+      ],
+      "reply": "元気、うちも元気、今こそ生きてんわ〜",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": null
+    },
+    {
+      "id": "greet_4",
+      "category": "挨拶",
+      "turns": [
+        "はじめまして"
+      ],
+      "reply": "へー、へー、元気そうで何よりだね〜！",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": null
+    },
+    {
+      "id": "fact_1",
+      "category": "事実質問",
+      "turns": [
+        "日本の首都はどこですか"
+      ],
+      "reply": "日本の首都は東京です、って？",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "fact_2",
+      "category": "事実質問",
+      "turns": [
+        "猫について教えてください"
+      ],
+      "reply": "猫って、眠すぎて頭が痛いって言うよね…",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "fact_3",
+      "category": "事実質問",
+      "turns": [
+        "プログラミングとは何ですか"
+      ],
+      "reply": "うーん、よくわからないけどよくわかってるから大丈夫！",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": false
+    },
+    {
+      "id": "fact_4",
+      "category": "事実質問",
+      "turns": [
+        "富士山の高さを知っていますか"
+      ],
+      "reply": "うーん、けどうち、おなかすいてる…すみません、腹が鳴って寝ぼけている…",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": false
+    },
+    {
+      "id": "emo_1",
+      "category": "相談・感情",
+      "turns": [
+        "最近仕事がうまくいかなくて落ち込んでいます"
+      ],
+      "reply": "うーん、まあ、うちは仕事がうまくいかなくて寂しいよ〜",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "emo_2",
+      "category": "相談・感情",
+      "turns": [
+        "友達と喧嘩してしまいました"
+      ],
+      "reply": "それは残念、でも友達と楽しいことと新しい友達が見つかることがあったらいいね〜",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "emo_3",
+      "category": "相談・感情",
+      "turns": [
+        "疲れました"
+      ],
+      "reply": "お疲れさま、リフレッシュしてみよ！うちも元気でいてね",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "emo_4",
+      "category": "相談・感情",
+      "turns": [
+        "ありがとうございます"
+      ],
+      "reply": "そうそう、そんなもんじゃなくて、楽しく過ごせることって大事だね〜",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": null
+    },
+    {
+      "id": "inst_1",
+      "category": "指示",
+      "turns": [
+        "おすすめの本を3つ挙げてください"
+      ],
+      "reply": "うーん、まずは何にしようか迷ってる。でも、きっと見つかると思うよw",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": false
+    },
+    {
+      "id": "inst_2",
+      "category": "指示",
+      "turns": [
+        "短く自己紹介してください"
+      ],
+      "reply": "自己紹介すると、簡単なサイトを開くだけで十分かな？",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": false
+    },
+    {
+      "id": "inst_3",
+      "category": "指示",
+      "turns": [
+        "予定を立てるコツを教えてください"
+      ],
+      "reply": "まずは何から始めようかを決めて、簡単なことから始めてみて。それからまたがんばろうよ",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": false
+    },
+    {
+      "id": "inst_4",
+      "category": "指示",
+      "turns": [
+        "今日はとても良い天気なので散歩に行きました。これを短く言い換えてください"
+      ],
+      "reply": "短く言い換えて、またより自然に表現するために「きれいさを楽しむ」って！",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": false
+    },
+    {
+      "id": "ctx_1",
+      "category": "2ターン目",
+      "turns": [
+        "猫を飼っています",
+        "名前は何がいいと思いますか"
+      ],
+      "reply": "うーん、まずは腹ごしらえしたいくらいかな。",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": false
+    },
+    {
+      "id": "ctx_2",
+      "category": "2ターン目",
+      "turns": [
+        "東京に住んでいます",
+        "おすすめの場所はありますか"
+      ],
+      "reply": "おすすめはいいけど、まずはお腹すいちゃったから行ってみよっか…",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": false
+    },
+    {
+      "id": "ctx_3",
+      "category": "2ターン目",
+      "turns": [
+        "プログラミングを勉強しています",
+        "何から始めればいいですか"
+      ],
+      "reply": "まずは簡単なサイトから始めてみて〜。そこから始めてみるのもアリかも！",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "ctx_4",
+      "category": "2ターン目",
+      "turns": [
+        "昨日映画を見ました",
+        "どう思いますか"
+      ],
+      "reply": "うーん、考えすぎないで。 うちもそう思ってるから",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": false
+    }
+  ]
+}

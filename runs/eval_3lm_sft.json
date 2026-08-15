@@ -1,0 +1,243 @@
+{
+  "tag": "3lm_sft",
+  "ckpt": "checkpoints/sft-final",
+  "holdout": "holdout_clean.txt",
+  "holdout_lines": 220,
+  "bits_per_char": 2.801,
+  "repetition_rate": 0.3,
+  "topic_rate": 0.667,
+  "broken_rate": 0.0,
+  "avg_reply_len": 76.0,
+  "sampling": {
+    "temperature": 0.8,
+    "top_k": 40,
+    "repetition_penalty": 1.15,
+    "seed": 777
+  },
+  "results": [
+    {
+      "id": "greet_1",
+      "category": "挨拶",
+      "turns": [
+        "こんにちは"
+      ],
+      "reply": "今日は何を助けることができますか？",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": null
+    },
+    {
+      "id": "greet_2",
+      "category": "挨拶",
+      "turns": [
+        "おはようございます"
+      ],
+      "reply": "こんにちは！今日は良い一日をお過ごしください。何かお手伝いできることがありましたら、どんなことでもお気軽にお尋ねください。",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": null
+    },
+    {
+      "id": "greet_3",
+      "category": "挨拶",
+      "turns": [
+        "元気ですか"
+      ],
+      "reply": "私は、あなたが持っているかもしれない質問をアシスタントとして提供するためにここにいます。今日はどうすればお手伝いできますか？",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": null
+    },
+    {
+      "id": "greet_4",
+      "category": "挨拶",
+      "turns": [
+        "はじめまして"
+      ],
+      "reply": "私の名前はオープンソースAIアシスタントです。 タスクについてさらに質問がある場合は、お気軽にお問い合わせください！",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": null
+    },
+    {
+      "id": "fact_1",
+      "category": "事実質問",
+      "turns": [
+        "日本の首都はどこですか"
+      ],
+      "reply": "日本の首都は東京です。 東京は日本の北東部に位置し、日本の政治と文化の中心地として知られています。",
+      "repetition": true,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "fact_2",
+      "category": "事実質問",
+      "turns": [
+        "猫について教えてください"
+      ],
+      "reply": "犬が猫について話しているとき、私は「ニャーチャ」と呼ばれた。猫の話では、「ニャーチャ」は人間を指す言葉で、一般的に動物の頭で飼いならされた鶏のことを指します。 「猫」という言葉は文脈によって異なる意味を持つため、具体的な単語や文を提供していただければ、より正確な情報を提供することができます。猫が主に人間と共生関係にあるために使われることが多いですね。",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "fact_3",
+      "category": "事実質問",
+      "turns": [
+        "プログラミングとは何ですか"
+      ],
+      "reply": "Pythonは、データ型のプログラミングアプリケーションを学習するために使用されます。たとえば、ウェブ開発のフレームワークを使用してPythonライブラリを作成し、テキストや画像などのエントリに入力できます。 言語モデルに基づいて、特定のタスクを実行するために使用できるコンパイラとインタラクティブなコードを提供します。",
+      "repetition": true,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "fact_4",
+      "category": "事実質問",
+      "turns": [
+        "富士山の高さを知っていますか"
+      ],
+      "reply": "はい、富士山の高さについて知っています。富士山は、世界最小の山であり、世界で3番目に大きいです。それは日本の富士山で最も高い山で、4番目に大きいです。",
+      "repetition": true,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "emo_1",
+      "category": "相談・感情",
+      "turns": [
+        "最近仕事がうまくいかなくて落ち込んでいます"
+      ],
+      "reply": "こんにちは、どうすればあなたを助けることができますか？",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": false
+    },
+    {
+      "id": "emo_2",
+      "category": "相談・感情",
+      "turns": [
+        "友達と喧嘩してしまいました"
+      ],
+      "reply": "これはあまりよくありません。 あなたが何人だったら、私があなたを助けることができるか教えてください？",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": false
+    },
+    {
+      "id": "emo_3",
+      "category": "相談・感情",
+      "turns": [
+        "疲れました"
+      ],
+      "reply": "私はあなたがあなたのためにできることであなたを助けることができる他に何かありますか？",
+      "repetition": true,
+      "broken": false,
+      "keyword_hit": false
+    },
+    {
+      "id": "emo_4",
+      "category": "相談・感情",
+      "turns": [
+        "ありがとうございます"
+      ],
+      "reply": "申し訳ありませんが、あなたが私に質問をするとき、私が何を意味するのかわかりません。私はあなたにもっと文脈を与えたくないので、「このトピックに関するあなたのプロンプト」という言葉を使用するときは必ず助けるべきです。",
+      "repetition": true,
+      "broken": false,
+      "keyword_hit": null
+    },
+    {
+      "id": "inst_1",
+      "category": "指示",
+      "turns": [
+        "おすすめの本を3つ挙げてください"
+      ],
+      "reply": "もちろんです！どのようなジャンルが好きですか？ ファンタジー、ミステリー、SF、歴史小説など、選択肢を指定していただければ、より具体的なおすすめができます。",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "inst_2",
+      "category": "指示",
+      "turns": [
+        "短く自己紹介してください"
+      ],
+      "reply": "こんにちは！私の名前はあなたのアシスタントです。私はOpenAssistantです。どのようにお手伝いできるかお知らせください。",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "inst_3",
+      "category": "指示",
+      "turns": [
+        "予定を立てるコツを教えてください"
+      ],
+      "reply": "スケジュールを立てるのにうんざりしています。あなたが今やるべきことは、あなたの予定を書き留めることです。タスクをリストアップして、それについてより多くのデータを収集し、必要なときに整理します。また、好きなトピックに特化したウェブサイトやアプリを使って、興味のあることをメモしたり、タスクを完了するためにカレンダーを作成することもできます。最後に、私はこれらのアイデアを整理し、スケジュールを改善するのに役立ついくつかのアイテムを提案します。",
+      "repetition": true,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "inst_4",
+      "category": "指示",
+      "turns": [
+        "今日はとても良い天気なので散歩に行きました。これを短く言い換えてください"
+      ],
+      "reply": "天気は、気象パターンのさまざまな場所や機能です。晴れた日には散歩に行きましたが、外に出ることができませんでした。そして、私はあなたのためにここにいます",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "ctx_1",
+      "category": "2ターン目",
+      "turns": [
+        "猫を飼っています",
+        "名前は何がいいと思いますか"
+      ],
+      "reply": "あなたの名前は「オープンアシスタント」です。",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "ctx_2",
+      "category": "2ターン目",
+      "turns": [
+        "東京に住んでいます",
+        "おすすめの場所はありますか"
+      ],
+      "reply": "もちろんです、どのようなジャンルの場所が好きですか？ 例えば小説、ミステリー、SF、歴史など、お好みに合わせておすすめすることができます。",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": true
+    },
+    {
+      "id": "ctx_3",
+      "category": "2ターン目",
+      "turns": [
+        "プログラミングを勉強しています",
+        "何から始めればいいですか"
+      ],
+      "reply": "まず、あなたのニーズと好みについてもう少し詳しく説明してください。",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": false
+    },
+    {
+      "id": "ctx_4",
+      "category": "2ターン目",
+      "turns": [
+        "昨日映画を見ました",
+        "どう思いますか"
+      ],
+      "reply": "私は人工知能であるため、個人的な意見や感情を持っていませんが、ユーザーが抱える不満について意見を持っているなら、この種の問題に答えるのは良いことです。",
+      "repetition": false,
+      "broken": false,
+      "keyword_hit": false
+    }
+  ]
+}

@@ -376,7 +376,10 @@ def main() -> None:
         )
         print(f"  {prompt} -> {reply}")
 
-    (log_path.parent / "sft_summary.json").write_text(
+    # ログ名から作る。固定名にすると、同じスクリプトで回した別の学習
+    # (口調の追加学習など) が前の記録を上書きしてしまう。
+    summary_path = log_path.with_name(f"{log_path.stem}_summary.json")
+    summary_path.write_text(
         json.dumps({
             "step": state.step, "total_steps": total_steps,
             "best_val": state.best_val, "mask_ratio": mask_ratio,
