@@ -35,6 +35,9 @@ from itertools import product
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+# runtime は src/ のものを使う。その3 では data/gal/ に複製が置いてあったが、
+# 同じ中身が2箇所にあると片方だけ直したときに気づけない。
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
 from validate import filter_pairs, report  # noqa: E402
 
