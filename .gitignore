@@ -18,12 +18,9 @@ data/scaling_*/
 data/cache*/
 data/raw/*
 !data/raw/.gitkeep
-# 検査を通したギャル会話は成果物なので配布する (約400KB)
-!data/raw/gal_line.jsonl
-
-# 検査前の中間生成物は追跡しない (data/gal/generate.py で作り直せる)
-data/gal/raw.jsonl
-data/gal/topics.txt
+# ギャル会話 2,610件はここには置かない。作ったのはその3で、置き場は
+# 3LM-MLX-GAL。同じものを3箇所に持つと、直したときに気づけない場所ができる。
+# https://github.com/hiroki-abe-58/3LM-MLX-GAL
 
 # チェックポイントは git で配らない。
 # 35.66M パラメータの重みは 136MB で、GitHub の 1ファイル 100MB 制限を超える
@@ -44,6 +41,8 @@ runs/3lm/*
 !runs/3lm/calibration.json
 # 土俵ごとの bits/char。「どの検証セットで測ったか」の根拠
 !runs/3lm/domain_bpc.json
+# 図に載せた返答の全文。切り方で印象を作っていないか確認できるようにする
+!runs/3lm/reply_compare.json
 !runs/3lm/scaling/
 runs/3lm/scaling/*
 !runs/3lm/scaling/*.csv

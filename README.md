@@ -14,6 +14,31 @@ M1 Max 1台で、**35.66M パラメータの日本語モデルを一晩（約8�
 - 学習: **約8時間 / 3.68億トークン / D/N 19.1**（Chinchilla の目安 20）
 - 環境: MacBook Pro 14インチ / M1 Max（32コアGPU）/ ユニファイドメモリ 64GB
 
+## 何が変わったか
+
+学習データを **126倍**、パラメータを **2.6倍**、学習時間を **18倍**にすると、
+返ってくる言葉はこう変わります。違うのはモデルだけで、
+質問も乱数もサンプリング条件もそろえてあります。
+
+![同じ質問への返答の比較](docs/images/3lm-vs-2lm-chat.png)
+
+前作は「日本の首都である『日本』」「東京は中国から来ており」と崩れていきます。
+今回は「関東地方に位置し、日本の政治と経済の中心地」まで正しく続きます。
+一方で**どちらも平気で嘘をつきます**（「東京都 - 州都」）。
+35M では**流暢さは買えても、正確さは買えません。**
+
+差がもっと大きいのは、対話ではなく**素の日本語**のほうです。
+
+![素の日本語の続きを書かせた比較](docs/images/3lm-vs-2lm-raw.png)
+
+前作は2文目で文法が壊れ、勝手に別の問答を始めます。
+今回は最後まで日本語の形を保ちます（中身は空虚ですが）。
+
+そして**ここが本題です。** この差がありながら、
+**4指標の採点では前作のほうが良い点を取りました**（後述の 8章）。
+採点に使う検証セットが、前作の学習データと同じ出どころだったからです。
+**測り方を変えないまま規模だけ変えると、良くなったものが悪くなったように見えます。**
+
 ## シリーズの位置づけ
 
 | リポジトリ | 内容 | 状態 |
@@ -22,8 +47,11 @@ M1 Max 1台で、**35.66M パラメータの日本語モデルを一晩（約8�
 | [2LM-MLX](https://github.com/hiroki-abe-58/2LM-MLX) | 会話が成立するレベルへ。評価設計・データ増量・サブワード化 | 凍結 |
 | [2LM-MLX-GAL](https://github.com/hiroki-abe-58/2LM-MLX-GAL) | 学習データを自分で作ってキャラクターを持たせる | 凍結 |
 | **3LM-MLX**（ここ）| **一晩の学習を落とさずに完走させる。データ不足の答え合わせ** | |
+| [3LM-MLX-GAL](https://github.com/hiroki-abe-58/3LM-MLX-GAL) | 上のモデルに口調を乗せたときの会話データと実測 | |
 
-**このリポジトリは単体で完結しています。** 他をクローンする必要はありません。
+**コードはここに集約しています。** 3LM-MLX-GAL はコードを持たず、
+このリポジトリを使う前提の**データと結果の置き場**です。同じものを2箇所に置くと、
+片方だけ直したときに気づけなくなるためです。
 
 ## このリポジトリの主題
 
@@ -384,6 +412,11 @@ python3 tools/compare_domains.py --baseline ../2LM-MLX-GAL/checkpoints/final
 ## 8-2. 口調を乗せる（3LM-MLX-GAL）
 
 ```bash
+# 会話データは 3LM-MLX-GAL にあります (このリポジトリには置いていません)
+curl -sL -o data/raw/gal_line.jsonl \
+  https://raw.githubusercontent.com/hiroki-abe-58/3LM-MLX-GAL/main/data/gal_line.jsonl
+
+python3 data/prepare_sft.py --no-hf --out data/corpus_gal.txt --min-char-freq 1
 python3 src/sft.py --init-from checkpoints/sft-final --corpus data/corpus_gal.txt \
     --out checkpoints/gal --epochs 8 --lr 1e-4
 ```
@@ -409,6 +442,10 @@ python3 src/sft.py --init-from checkpoints/sft-final --corpus data/corpus_gal.tx
 
 なお当初狙っていた「必要な会話数の境界」は**測れていません**。
 2,610件で足りてしまったので、下限は分からないままです。
+
+会話データそのものと、口調ありモデルの重みは
+[3LM-MLX-GAL](https://github.com/hiroki-abe-58/3LM-MLX-GAL) にあります。
+**このリポジトリは学習と評価のコード側**で、データは持ちません。
 
 ## 9. 公開前の検査
 
@@ -467,6 +504,7 @@ prefix attack で測ります（`tools/check_pii.py`）。
 | `tools/check_leak.py` / `substring_scan.py` | 検証セット汚染の検査（ローリングハッシュ） |
 | `tools/check_mask.py` / `check_kvcache.py` | マスクと KVキャッシュの検査 |
 | `tools/check_pii.py` / `secret_scan.py` | 個人情報と機密の検査 |
+| `tools/compare_replies.py` / `plot_replies.py` | 前作と今作に同じ入力を与えて並べる（図の文言を手打ちしない） |
 | `tools/make_model_card.py` | モデルカードを成果物から自動生成 |
 | `scripts/train_overnight.sh` | 一晩の学習（caffeinate / 自動再投入） |
 
